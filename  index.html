@@ -1,0 +1,2679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structured Spaces</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream: #FAF9F6;
+            --warm: #F5F2ED;
+            --oatmeal: #EDE8E0;
+            --taupe: #E5E1DA;
+            --stone: #8E8981;
+            --text: #5A5A5A;
+            --dark: #1A1A1A;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--cream);
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+        /* ─── HEADER (invisible overlay) ─── */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.1rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            background: var(--cream);
+            border-bottom: 1px solid var(--taupe);
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 2rem;
+            justify-self: start;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 2rem;
+            justify-self: end;
+        }
+
+        .logo-block {
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--dark);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .logo-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 0.25em;
+            color: var(--stone);
+        }
+
+        nav a {
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text);
+            transition: color 0.3s;
+        }
+
+        nav a:hover { color: var(--dark); }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            width: 100%;
+            margin-top: 3.5rem;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 3.5rem);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: saturate(0.85) sepia(0.08) brightness(0.95) contrast(1.02);
+        }
+
+        .hero-img-mobile {
+            display: none;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background:
+                rgba(30,25,20,0.3),
+                linear-gradient(
+                    to bottom,
+                    rgba(30,25,20,0.05) 0%,
+                    rgba(30,25,20,0.15) 60%,
+                    rgba(30,25,20,0.4) 100%
+                );
+            z-index: 1;
+        }
+
+        .hero-bottom-left {
+            position: absolute;
+            bottom: 3rem;
+            left: 3rem;
+            z-index: 2;
+            color: #fff;
+            max-width: 520px;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.4), 0 0 20px rgba(0,0,0,0.15);
+        }
+
+        .hero-bottom-lead {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.35;
+            color: #fff;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-bottom-body {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 1.1rem;
+        }
+
+        .hero-bottom-closer {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+            font-weight: 400;
+            font-style: italic;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1.75rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            color: #fff;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hero-btn:hover {
+            background: #fff;
+            color: var(--dark);
+            border-color: #fff;
+        }
+
+        .hero-btn--filled {
+            background: #fff;
+            color: var(--dark);
+            border-color: #fff;
+        }
+
+        .hero-btn--filled:hover {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        /* ─── STRUCTURED GOALS ─── */
+        .goals {
+            padding: 5.5rem 3rem 6rem;
+            background: var(--warm);
+        }
+
+        .goals-header {
+            text-align: center;
+            margin-bottom: 4.5rem;
+        }
+
+        .goals-line {
+            width: 40px;
+            height: 1px;
+            background: var(--taupe);
+            margin: 0 auto 2rem;
+        }
+
+        .goals-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 1rem;
+        }
+
+        .goals-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dark);
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .goal-card {
+            padding: 2.5rem 2.25rem;
+            background: var(--cream);
+            position: relative;
+        }
+
+        .goal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 2.25rem;
+            width: 30px;
+            height: 1px;
+            background: var(--taupe);
+        }
+
+        .goal-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--taupe);
+            margin-bottom: 1rem;
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+
+        .goal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--dark);
+            margin-bottom: 1.25rem;
+            line-height: 1.3;
+        }
+
+        .goal-text {
+            font-size: 0.8rem;
+            line-height: 1.9;
+            color: var(--text);
+        }
+
+        /* ─── WHY STRUCTURED SPACES ─── */
+        .why-section {
+            background: var(--oatmeal);
+        }
+
+        .why-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 600px;
+        }
+
+        .why-image {
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .why-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .why-content {
+            padding: 4.5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .why-label {
+            font-size: 0.55rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .why-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 2.2vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .why-text {
+            font-size: 0.82rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1.2rem;
+        }
+
+        .why-text strong {
+            font-weight: 400;
+            color: var(--dark);
+        }
+
+        .why-text em {
+            font-style: italic;
+        }
+
+        /* ─── ABOUT ME ─── */
+        .about-me {
+            background: var(--oatmeal);
+        }
+
+        .about-me-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 550px;
+        }
+
+        .about-me-content {
+            padding: 5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .about-me-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 1rem;
+        }
+
+        .about-me-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 2.2vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .about-me-text {
+            font-size: 0.82rem;
+            line-height: 1.9;
+            color: var(--text);
+            margin-bottom: 1.2rem;
+        }
+
+        .about-me-text strong {
+            font-weight: 400;
+            color: var(--dark);
+        }
+
+        .about-me-image {
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .about-me-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        /* ─── REVIEWS (narrow strip with headline) ─── */
+        .reviews {
+            padding: 3.5rem 3rem;
+            background: var(--cream);
+            border-top: 1px solid var(--taupe);
+            border-bottom: 1px solid var(--taupe);
+        }
+
+        .reviews-inner {
+            max-width: 650px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .reviews-headline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 2vw, 1.7rem);
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 0.04em;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .reviews-slider {
+            overflow: hidden;
+        }
+
+        .reviews-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .review-slide {
+            min-width: 100%;
+            padding: 0 2rem;
+        }
+
+        .review-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            line-height: 1;
+            color: var(--taupe);
+            margin-bottom: 0.5rem;
+        }
+
+        .review-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.55;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .review-author {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--stone);
+        }
+
+        .review-author strong {
+            color: var(--text);
+            font-weight: 400;
+        }
+
+        .reviews-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+
+        .reviews-nav-btn {
+            background: none;
+            border: 1px solid var(--taupe);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            color: var(--stone);
+            transition: all 0.3s;
+        }
+
+        .reviews-nav-btn:hover {
+            border-color: var(--dark);
+            color: var(--dark);
+        }
+
+        .reviews-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .review-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--taupe);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+        }
+
+        .review-dot.active {
+            background: var(--dark);
+            transform: scale(1.3);
+        }
+
+        /* ─── PROCESS (tabs) ─── */
+        .process {
+            padding: 5rem 3rem;
+            background: var(--warm);
+        }
+
+        .process-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .process-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .process-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--dark);
+        }
+
+        .process-tabs {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .process-tabs-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid var(--taupe);
+        }
+
+        .process-tab {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .process-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--dark);
+            transition: width 0.3s;
+        }
+
+        .process-tab.active::after {
+            width: 100%;
+        }
+
+        .process-tab:hover {
+            opacity: 0.7;
+        }
+
+        .process-tab-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--taupe);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .process-tab.active .process-tab-num {
+            color: var(--dark);
+        }
+
+        .process-tab-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--stone);
+            transition: color 0.3s;
+        }
+
+        .process-tab.active .process-tab-title {
+            color: var(--dark);
+        }
+
+        .process-panel {
+            display: none;
+            padding: 2.5rem 0;
+            text-align: center;
+        }
+
+        .process-panel.active {
+            display: block;
+        }
+
+        .process-panel-text {
+            font-size: 0.82rem;
+            line-height: 1.9;
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ─── STATS ─── */
+        .stats {
+            padding: 3.5rem 3rem;
+            background: var(--warm);
+        }
+
+        .stats-heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 0.06em;
+            color: #3a3a3a;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.25rem 1.5rem;
+            position: relative;
+        }
+
+        .stat-card:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 30px;
+            width: 1px;
+            background: var(--taupe);
+        }
+
+        .stat-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 2vw, 1.6rem);
+            font-weight: 300;
+            font-style: italic;
+            color: #3a3a3a;
+            line-height: 1;
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-label {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            color: #5a5a5a;
+            line-height: 1.5;
+        }
+
+        /* ─── SERVICES ─── */
+        .services {
+            padding: 5rem 3rem;
+            background: var(--oatmeal);
+        }
+
+        .services-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .services-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .services-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--dark);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            padding: 2.5rem 2rem;
+            padding-top: 0;
+            background: #f7f3ee;
+            text-align: center;
+            transition: transform 0.3s;
+            position: relative;
+            border: 1px solid #3a3a3a;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .service-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: #2a2a2a;
+            margin-bottom: 1rem;
+            display: block;
+            background: transparent;
+            padding: 1.5rem 1rem 0.75rem;
+            border-bottom: 0.5px solid #c5bdb3;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .service-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--taupe);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .service-price {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.7rem;
+            color: var(--stone);
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.05em;
+        }
+
+        .service-desc {
+            font-size: 0.78rem;
+            line-height: 1.85;
+            color: #3a3a3a;
+            margin-bottom: 1.5rem;
+        }
+
+        .services-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            margin-top: 3.5rem;
+        }
+
+        .services-btn {
+            display: inline-block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 0.8rem 1.6rem;
+            border: 1px solid #3a3a3a;
+            color: #2a2a2a;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .services-btn:hover {
+            background: var(--dark);
+            color: var(--cream);
+            border-color: var(--dark);
+        }
+
+        .service-face {
+            display: none;
+        }
+
+        .service-face.active {
+            display: block;
+        }
+
+        .service-list {
+            list-style: disc;
+            padding: 0;
+            text-align: center;
+            margin-bottom: 0;
+            display: inline-block;
+        }
+
+        .service-face--back {
+            text-align: center;
+        }
+
+        .service-list li {
+            font-size: 0.72rem;
+            line-height: 1.9;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .service-toggle {
+            background: none;
+            border: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--stone);
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+
+        .service-toggle:hover {
+            color: var(--dark);
+        }
+
+        /* ─── MAGAZINE + IMAGE (side by side) ─── */
+        .magazine-section {
+            background: var(--warm);
+        }
+
+        .magazine-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 550px;
+        }
+
+        .magazine-image {
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .magazine-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .magazine-content {
+            padding: 4rem 3.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+        }
+
+        .magazine-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.25em;
+            color: var(--stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .magazine-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .magazine-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 1.5vw, 1.15rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--stone);
+            margin-bottom: 1.75rem;
+        }
+
+        .magazine-text {
+            font-size: 0.8rem;
+            line-height: 2;
+            color: var(--text);
+            margin-bottom: 2rem;
+        }
+
+        .magazine-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .magazine-tag {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.4rem 0.85rem;
+            border: 1px solid var(--taupe);
+            color: var(--stone);
+        }
+
+        .magazine-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+            font-weight: 300;
+            color: var(--stone);
+            margin-bottom: 1.75rem;
+        }
+
+        .magazine-price strong {
+            font-weight: 400;
+            color: var(--dark);
+            font-size: 1.1em;
+        }
+
+        .magazine-btn {
+            display: inline-block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.9rem 2.5rem;
+            border: 1px solid var(--taupe);
+            color: var(--dark);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-start;
+        }
+
+        .magazine-btn:hover {
+            background: var(--dark);
+            color: var(--cream);
+            border-color: var(--dark);
+        }
+
+        .magazine-note {
+            font-size: 0.55rem;
+            color: var(--stone);
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        /* ─── CTA SLIDESHOW (wide) ─── */
+        .cta-section {
+            background: var(--cream);
+            padding: 4.5rem 3rem;
+            border-top: 1px solid var(--taupe);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .cta-line {
+            width: 40px;
+            height: 1px;
+            background: var(--taupe);
+            margin: 0 auto 1.5rem;
+        }
+
+        .cta-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 3rem;
+        }
+
+        .cta-slider-outer {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .cta-slider-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .cta-slide {
+            min-width: 100%;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .cta-slide-inner {
+            background: var(--warm);
+            border: 1px solid var(--taupe);
+            padding: 3.5rem 3rem;
+            max-width: 580px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .cta-slide-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--dark);
+            transition: width 0.5s ease;
+        }
+
+        .cta-slide-inner:hover::before {
+            width: 60px;
+        }
+
+        .cta-slide-inner:hover {
+            box-shadow: 0 8px 30px rgba(26,26,26,0.06);
+            transform: translateY(-2px);
+        }
+
+        .cta-slide-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--taupe);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .cta-slide-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-slide-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 2vw, 1.6rem);
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 1.25rem;
+        }
+
+        .cta-slide-text {
+            font-size: 0.8rem;
+            line-height: 1.9;
+            color: var(--text);
+            max-width: 420px;
+            margin: 0 auto 1.75rem;
+        }
+
+        .cta-slide-btn {
+            display: inline-block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 0.8rem 1.8rem;
+            border: 1px solid var(--taupe);
+            color: var(--dark);
+            transition: all 0.3s;
+            cursor: pointer;
+            background: none;
+        }
+
+        .cta-slide-btn:hover {
+            background: var(--dark);
+            color: var(--cream);
+            border-color: var(--dark);
+        }
+
+        .cta-contact-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 0;
+        }
+
+        .cta-contact-list li {
+            font-size: 0.78rem;
+            line-height: 2.4;
+            color: var(--text);
+        }
+
+        .cta-contact-list a {
+            color: var(--dark);
+            transition: color 0.3s;
+        }
+
+        .cta-contact-list a:hover {
+            color: var(--stone);
+        }
+
+        .cta-contact-list .contact-label {
+            font-size: 0.5rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--stone);
+            margin-right: 0.5rem;
+        }
+
+        .cta-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .cta-arrow {
+            background: none;
+            border: 1px solid var(--taupe);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--stone);
+            transition: all 0.3s;
+        }
+
+        .cta-arrow:hover {
+            border-color: var(--dark);
+            color: var(--dark);
+            transform: scale(1.1);
+        }
+
+        .cta-dots {
+            display: flex;
+            gap: 0.65rem;
+        }
+
+        .cta-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--taupe);
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s;
+            padding: 0;
+        }
+
+        .cta-dot.active {
+            background: var(--dark);
+            transform: scale(1.4);
+        }
+
+        .cta-progress {
+            max-width: 200px;
+            height: 1px;
+            background: var(--taupe);
+            margin: 1.5rem auto 0;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .cta-progress-bar {
+            height: 100%;
+            background: var(--dark);
+            width: 33.33%;
+            transition: width 0.4s ease;
+        }
+
+        /* ─── MAGAZINE SUBSCRIBE MODAL ─── */
+        .mag-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mag-modal-backdrop.open {
+            display: flex;
+        }
+
+        .mag-modal {
+            background: var(--cream);
+            max-width: 480px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 3rem 2.5rem;
+            position: relative;
+        }
+
+        .mag-modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--stone);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .mag-modal-close:hover {
+            color: var(--dark);
+        }
+
+        .mag-modal-line {
+            width: 30px;
+            height: 1px;
+            background: var(--taupe);
+            margin: 0 auto 1.25rem;
+        }
+
+        .mag-modal-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .mag-modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 2vw, 1.7rem);
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .mag-modal-price-tag {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--stone);
+            margin-bottom: 2rem;
+        }
+
+        .mag-modal-price-tag strong {
+            color: var(--dark);
+            font-weight: 400;
+        }
+
+        .mag-form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .mag-form-label {
+            display: block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--stone);
+            margin-bottom: 0.4rem;
+        }
+
+        .mag-form-input {
+            width: 100%;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--dark);
+            background: var(--warm);
+            border: 1px solid var(--taupe);
+            padding: 0.7rem 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .mag-form-input:focus {
+            border-color: var(--stone);
+        }
+
+        .mag-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .mag-form-divider {
+            width: 100%;
+            height: 1px;
+            background: var(--taupe);
+            margin: 1.75rem 0;
+        }
+
+        .mag-form-section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--dark);
+            margin-bottom: 1.25rem;
+        }
+
+        .mag-form-submit {
+            display: block;
+            width: 100%;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 0.9rem 2rem;
+            border: 1px solid var(--dark);
+            background: var(--dark);
+            color: var(--cream);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .mag-form-submit:hover {
+            background: transparent;
+            color: var(--dark);
+        }
+
+        .mag-form-note {
+            text-align: center;
+            font-size: 0.55rem;
+            color: var(--stone);
+            margin-top: 1rem;
+            font-style: italic;
+            line-height: 1.7;
+        }
+
+        /* ─── ENQUIRY MODAL ─── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--cream);
+            max-width: 560px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 3rem 2.5rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--stone);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--dark);
+        }
+
+        .modal-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 2vw, 1.7rem);
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--stone);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--dark);
+            background: var(--warm);
+            border: 1px solid var(--taupe);
+            padding: 0.7rem 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--stone);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238E8981'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.9rem center;
+            padding-right: 2rem;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-or {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            font-style: italic;
+            color: var(--stone);
+            text-align: center;
+            margin: -0.5rem 0 1.25rem;
+        }
+
+        .form-upload {
+            width: 100%;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--text);
+        }
+
+        .form-upload::file-selector-button {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--taupe);
+            background: var(--warm);
+            color: var(--dark);
+            cursor: pointer;
+            margin-right: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .form-upload::file-selector-button:hover {
+            background: var(--dark);
+            color: var(--cream);
+            border-color: var(--dark);
+        }
+
+        .form-submit {
+            display: inline-block;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: 0.85rem 2rem;
+            border: 1px solid var(--dark);
+            background: var(--dark);
+            color: var(--cream);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .form-submit:hover {
+            background: transparent;
+            color: var(--dark);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--cream);
+            padding: 1.5rem 3rem;
+            border-top: 1px solid var(--taupe);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .footer-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.55rem;
+            font-weight: 300;
+            font-style: italic;
+            letter-spacing: 0.25em;
+            color: var(--stone);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-links a {
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text);
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--dark); }
+
+        .footer-bottom {
+            padding-top: 1rem;
+            border-top: 1px solid var(--taupe);
+            font-size: 0.5rem;
+            color: var(--stone);
+            letter-spacing: 0.08em;
+        }
+
+        /* ─── COOKIE BANNER ─── */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--cream);
+            border-top: 1px solid var(--taupe);
+            padding: 1.25rem 3rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-banner.show { display: flex; }
+
+        .cookie-text {
+            font-size: 0.72rem;
+            color: var(--text);
+            max-width: 500px;
+        }
+
+        .cookie-btns {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .cookie-btn {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.5rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cookie-accept {
+            background: var(--dark);
+            color: var(--cream);
+            border: 1px solid var(--dark);
+        }
+
+        .cookie-accept:hover {
+            background: transparent;
+            color: var(--dark);
+        }
+
+        .cookie-essential {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--taupe);
+        }
+
+        .cookie-essential:hover {
+            border-color: var(--dark);
+            color: var(--dark);
+        }
+
+        /* ─── ANIMATIONS ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 1024px) {
+            .goals-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 600px;
+            }
+
+            .why-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .why-image {
+                min-height: 350px;
+            }
+
+            .why-content {
+                padding: 3rem 2.5rem;
+            }
+
+            .about-me-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .about-me-image {
+                min-height: 350px;
+                order: -1;
+            }
+
+            .about-me-content {
+                padding: 3rem 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                max-width: 450px;
+            }
+
+            .magazine-row {
+                grid-template-columns: 1fr;
+            }
+
+            .magazine-image {
+                min-height: 300px;
+            }
+
+            .cta-slider-outer { margin: 0 -1rem; }
+            .cta-slide { padding: 0 1rem; }
+
+            .footer-links {
+                gap: 1.25rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-img-desktop { display: none; }
+            .hero-img-mobile { display: block; }
+
+            header { padding: 0.75rem 1rem; }
+            .nav-left, .nav-right { gap: 1rem; }
+            nav a { font-size: 0.45rem; }
+            .logo { font-size: 0.85rem; }
+            .logo-sub { font-size: 0.45rem; }
+
+            .hero-bottom-left {
+                bottom: 2rem;
+                left: 1.5rem;
+                max-width: 320px;
+            }
+
+            .hero-bottom-lead {
+                font-size: 1.5rem;
+            }
+
+            .goals { padding: 3.5rem 1.5rem; }
+
+            .goal-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .why-content {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .about-me-content {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .reviews { padding: 2.5rem 1.5rem; }
+
+            .stats { padding: 3rem 1.5rem; }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .services { padding: 3rem 1.5rem; }
+
+            .service-card { padding: 2rem 1.5rem; }
+
+            .review-slide { padding: 0 0.5rem; }
+
+            .process { padding: 3rem 1.5rem; }
+
+            .process-tabs-row {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0;
+            }
+
+            .process-tab { padding: 1.25rem 0.5rem; }
+
+            .process-tab-num { font-size: 1.5rem; }
+
+            .process-tab-title { font-size: 0.75rem; }
+
+            .magazine-content { padding: 2.5rem 1.5rem; }
+            .cta-section { padding: 3rem 1.5rem; }
+            .cta-slide-inner { padding: 2.5rem 1.5rem; }
+            .cta-slide { padding: 0 0.5rem; }
+
+            .form-row { grid-template-columns: 1fr; }
+
+            .mag-form-row { grid-template-columns: 1fr; }
+
+            footer { padding: 1.5rem; }
+            .footer-links { flex-wrap: wrap; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <nav class="nav-left">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+    </nav>
+    <a href="admin.html" class="logo-block">
+        <span class="logo">Structured Spaces</span>
+        <span class="logo-sub">Interior Styling for B&amp;Bs</span>
+    </a>
+    <nav class="nav-right">
+        <a href="#" class="enquiry-trigger">Enquire</a>
+        <a href="https://instagram.com/thestructuredspaces" target="_blank">Instagram</a>
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-image">
+        <img src="village.jpg" alt="Cotswolds stone cottage" class="hero-img-desktop">
+        <img src="modern kitchen.jpg" alt="Beautifully styled country kitchen" class="hero-img-mobile">
+        <div class="hero-overlay"></div>
+        <div class="hero-bottom-left">
+            <h2 class="hero-bottom-lead">You know your space is worth more than your bookings suggest.</h2>
+            <p class="hero-bottom-body">The feeling that you should be charging more, booking faster, doing better: that's not in your head. That's the gap between where you are and where you should be.</p>
+            <p class="hero-bottom-closer">Closing it is what I do.</p>
+            <div class="hero-buttons">
+                <a href="#services" class="hero-btn">Our Services</a>
+                <button class="hero-btn enquiry-trigger">Enquire for a Quote</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STRUCTURED GOALS -->
+<section class="goals" data-section="Structured Goals">
+    <div class="goals-header reveal">
+        <div class="goals-line"></div>
+        <p class="goals-label">Structured Goals</p>
+        <h2 class="goals-title">What I Help My Clients Achieve</h2>
+    </div>
+    <div class="goals-grid">
+        <div class="goal-card reveal">
+            <div class="goal-num">01</div>
+            <h3 class="goal-title">Charge 20 to 40% More</h3>
+            <p class="goal-text">Listings in your area are charging the same, or more, and staying fully booked while you have gaps. It's not that their space is better than yours. It's that it's been marketed correctly. Better styling, better photos, better first impression. My job is simple: help you charge more and make your B&B the one guests can't scroll past.</p>
+        </div>
+        <div class="goal-card reveal">
+            <div class="goal-num">02</div>
+            <h3 class="goal-title">Leave Average Behind</h3>
+            <p class="goal-text">Across the UK, 20 B&Bs are booked every minute. The average rate is &pound;110. The average occupancy is 50%. Average means half-empty calendars and leaving money on the table. My goal isn't to make your B&B better than it was. It's to make it better than everyone else's. Frequent bookings. Premium rates. A business that stops competing with average and starts leaving it behind.</p>
+        </div>
+        <div class="goal-card reveal">
+            <div class="goal-num">03</div>
+            <h3 class="goal-title">See the Return</h3>
+            <p class="goal-text">Your bookings say everything. If you're fully booked year-round, I'm not what you need, and I'll be the first to tell you. But if there are gaps, if you know your space could be doing more, that's exactly why I exist. Better reviews. Guests who come back. Calendars that fill themselves. An experience people remember and recommend. You've invested the time, the money, the effort. I make sure you finally see the return.</p>
+        </div>
+    </div>
+</section>
+
+<!-- WHY STRUCTURED SPACES -->
+<section class="why-section" data-section="Why Structured Spaces">
+    <div class="why-inner">
+        <div class="why-image">
+            <img src="bathoomnice.jpg" alt="Beautifully styled bathroom">
+        </div>
+        <div class="why-content">
+            <p class="why-label reveal">Why Structured Spaces</p>
+            <h2 class="why-title reveal">A Different Approach</h2>
+            <p class="why-text reveal">Traditional designers charge by the hour. They spend weeks on site visits and leave you with a mood board that looks beautiful but tells you nothing. You're thousands out of pocket and still wondering where to start.</p>
+            <p class="why-text reveal"><strong>I do things differently.</strong></p>
+            <p class="why-text reveal">Structured Spaces is fully virtual, which means no waiting around, no scheduling headaches, and no watching the clock. You send me your space, I send you a complete guide. Everything you need to know: what to change, what to keep, what to buy, where to put it, how to photograph it. Clear. Actionable. Yours to implement whenever suits you.</p>
+            <p class="why-text reveal">Why guides? Because you know your space better than anyone. You don't need someone hovering. You need the right direction, then the freedom to make it happen on your terms, at your pace.</p>
+            <p class="why-text reveal">And here's what makes this different from anything else out there: I don't design spaces to look good. I design them to <em>book</em>. Every recommendation is made with your listing in mind: how it photographs, how it feels online, how it makes a guest stop scrolling and start paying.</p>
+            <p class="why-text reveal">This isn't about trends or mood boards or beige palettes. It's about results. Fuller calendars. Higher rates. Guests who book because they <em>couldn't not</em>.</p>
+            <p class="why-text reveal"><strong>Designer expertise without the designer price tag. On your schedule. Built to pay for itself.</strong></p>
+        </div>
+    </div>
+</section>
+
+<!-- THE PROCESS -->
+<section class="process" data-section="The Process">
+    <div class="process-header reveal">
+        <p class="process-label">How It Works</p>
+        <h2 class="process-title">The Process</h2>
+    </div>
+    <div class="process-tabs reveal">
+        <div class="process-tabs-row">
+            <div class="process-tab active" data-tab="0">
+                <div class="process-tab-num">01</div>
+                <div class="process-tab-title">Get Your Quote</div>
+            </div>
+            <div class="process-tab" data-tab="1">
+                <div class="process-tab-num">02</div>
+                <div class="process-tab-title">Let's Talk</div>
+            </div>
+            <div class="process-tab" data-tab="2">
+                <div class="process-tab-num">03</div>
+                <div class="process-tab-title">Your Guide, Created</div>
+            </div>
+            <div class="process-tab" data-tab="3">
+                <div class="process-tab-num">04</div>
+                <div class="process-tab-title">Deliver &amp; Support</div>
+            </div>
+        </div>
+        <div class="process-panel active" data-panel="0">
+            <p class="process-panel-text">It starts with a simple enquiry. Tell me about your space, send a few photos, and within 24 hours you'll have a personalised quote in your inbox. No chasing. No waiting. If you're happy to move forward, a 50% deposit secures your spot and we book your consultation for whenever suits you best.</p>
+        </div>
+        <div class="process-panel" data-panel="1">
+            <p class="process-panel-text">A relaxed 45 to 60 minute call where we dig into everything: your space, your guests, your goals. We'll talk about what's working, what's not, what colours you love, what budget you're working with, how your rates are sitting, and how you're feeling about the whole thing. No question is too small. By the end, I'll know your space almost as well as you do.</p>
+        </div>
+        <div class="process-panel" data-panel="2">
+            <p class="process-panel-text">I take everything from our call and turn it into your personalised design guide, a clear, actionable document tailored to your space and your package. Room by room, detail by detail. What to change, what to keep, what to buy, and exactly where to put it. You'll receive it as a PDF, and if something doesn't feel right, you get a round of refinements included. This is your guide, it should feel like yours.</p>
+        </div>
+        <div class="process-panel" data-panel="3">
+            <p class="process-panel-text">Once you're happy, the remaining 50% is settled and your final guide is yours to keep. But it doesn't end there. You can book a follow-up call where we go through everything together. I can help you position pieces when they arrive, check in on what you've implemented, or just answer questions as you bring it all to life. You're not left on your own.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT ME -->
+<section class="about-me" id="about" data-section="About Me">
+    <div class="about-me-inner">
+        <div class="about-me-content">
+            <p class="about-me-label reveal">About Me</p>
+            <h2 class="about-me-title reveal">I'm Tilly Thomson</h2>
+            <p class="about-me-text reveal">I'm the founder of Structured Spaces. For years I've been rearranging rooms and styling spaces. It's instinct. I walk into a room and immediately see what needs to change.</p>
+            <p class="about-me-text reveal">Structured Spaces was born from a simple observation: potential is everywhere, but presentation is rare. I'd scroll through listings and see B&Bs with beautiful bones let down by small, fixable details. Furniture that fought the room. Spaces that felt cold when they should have felt inviting. Listings that didn't reflect the care clearly put into them.</p>
+            <p class="about-me-text reveal"><strong>I knew I could bridge that gap.</strong></p>
+            <p class="about-me-text reveal">I work exclusively with B&Bs and boutique stays. My approach is research-led, detail-focused, and designed to deliver results you can measure in your bookings. This isn't guesswork or trends. It's intentional, strategic styling that positions your space where it belongs.</p>
+            <p class="about-me-text reveal"><strong>You've invested in your property. I make sure that investment is seen.</strong></p>
+        </div>
+        <div class="about-me-image">
+            <img src="bedroomwithtea.jpg" alt="Styled bedroom with tea">
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" data-section="Did You Know">
+    <p class="stats-heading reveal">Did You Know?</p>
+    <div class="stats-grid">
+        <div class="stat-card reveal">
+            <div class="stat-number">Up to 40%</div>
+            <p class="stat-label">Properties styled with a professional<br>guide charge up to 40% more per night</p>
+        </div>
+        <div class="stat-card reveal">
+            <div class="stat-number">3 in 4</div>
+            <p class="stat-label">Guests say listing photos are the<br>biggest factor in their booking decision</p>
+        </div>
+        <div class="stat-card reveal">
+            <div class="stat-number">Under 5s</div>
+            <p class="stat-label">The average traveller decides whether<br>to book or scroll past in under 5 seconds</p>
+        </div>
+        <div class="stat-card reveal">
+            <div class="stat-number">2&times; more</div>
+            <p class="stat-label">Well-presented listings receive up to<br>twice as many enquiries as unstyled ones</p>
+        </div>
+    </div>
+</section>
+
+<!-- CLIENT REVIEWS -->
+<section class="reviews" data-section="Reviews">
+    <div class="reviews-inner reveal">
+        <p class="reviews-headline">What Our Clients Say</p>
+        <div class="reviews-slider">
+            <div class="reviews-track" id="reviewsTrack">
+                <div class="review-slide">
+                    <div class="review-quote">&ldquo;</div>
+                    <p class="review-text">This is hands down the single most valuable investment we've made for our business.</p>
+                    <p class="review-author"><strong>The Hollies</strong> &mdash; Cotswolds</p>
+                </div>
+                <div class="review-slide">
+                    <div class="review-quote">&ldquo;</div>
+                    <p class="review-text">We were fully booked within three weeks of implementing the guide. We couldn't believe the difference.</p>
+                    <p class="review-author"><strong>Meadow View</strong> &mdash; Lake District</p>
+                </div>
+                <div class="review-slide">
+                    <div class="review-quote">&ldquo;</div>
+                    <p class="review-text">Tilly completely transformed how we see our space. We've raised our rates and we're busier than ever.</p>
+                    <p class="review-author"><strong>The Old Barn</strong> &mdash; Somerset</p>
+                </div>
+                <div class="review-slide">
+                    <div class="review-quote">&ldquo;</div>
+                    <p class="review-text">Worth every penny. The guide was so clear and easy to follow. Our guests keep complimenting the styling.</p>
+                    <p class="review-author"><strong>Rose Cottage</strong> &mdash; Norfolk</p>
+                </div>
+            </div>
+            <div class="reviews-nav">
+                <button class="reviews-nav-btn" id="reviewsPrev">&larr;</button>
+                <div class="reviews-dots">
+                    <button class="review-dot active" data-slide="0"></button>
+                    <button class="review-dot" data-slide="1"></button>
+                    <button class="review-dot" data-slide="2"></button>
+                    <button class="review-dot" data-slide="3"></button>
+                </div>
+                <button class="reviews-nav-btn" id="reviewsNext">&rarr;</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services" data-section="Services">
+    <div class="services-header reveal">
+        <p class="services-label">Packages</p>
+        <h2 class="services-title">Our Services</h2>
+    </div>
+    <div class="services-grid">
+        <div class="service-card reveal">
+            <h3 class="service-name">The Essentials</h3>
+            <p class="service-price">From &pound;375</p>
+            <div class="service-face service-face--front active">
+                <p class="service-desc">For hosts who want results without a renovation. Small, strategic changes that make a big difference, plus a clear look at how to maximise your occupancy and profit with what you already have.</p>
+            </div>
+            <div class="service-face service-face--back">
+                <ul class="service-list">
+                    <li>Initial consultation (45 to 60 mins)</li>
+                    <li>Room-by-room evaluation</li>
+                    <li>Guest experience review with recommendations</li>
+                    <li>D&eacute;cor recommendations with links</li>
+                    <li>Financial review</li>
+                    <li>Photo preparation guidance</li>
+                    <li>Up to two refinements</li>
+                </ul>
+            </div>
+            <button class="service-toggle">What's included &darr;</button>
+        </div>
+        <div class="service-card reveal">
+            <h3 class="service-name">The Signature</h3>
+            <p class="service-price">From &pound;795</p>
+            <div class="service-face service-face--front active">
+                <p class="service-desc">For hosts ready to go further. A full redesign strategy covering furniture, layout, and styling, plus competitor analysis and a priority action plan to reposition your space and stand out in your market.</p>
+            </div>
+            <div class="service-face service-face--back">
+                <ul class="service-list">
+                    <li>Everything in The Essentials</li>
+                    <li>Furniture sourcing with links</li>
+                    <li>Layout planning &amp; flow optimisation</li>
+                    <li>Competitor analysis &amp; market review</li>
+                    <li>Priority action plan</li>
+                    <li>Styling guidance for each room</li>
+                    <li>Post-delivery call</li>
+                    <li>Up to three refinements</li>
+                </ul>
+            </div>
+            <button class="service-toggle">What's included &darr;</button>
+        </div>
+        <div class="service-card reveal">
+            <h3 class="service-name">The Bespoke</h3>
+            <p class="service-price">Price on Request</p>
+            <div class="service-face service-face--front active">
+                <p class="service-desc">For hosts who need something different. If the other packages don't quite fit, we'll build one that does &mdash; tailored to your space, your goals, and your budget. Tell me what you need and I'll put together a custom quote designed to ensure your success.</p>
+            </div>
+        </div>
+    </div>
+    <div class="services-buttons reveal">
+        <a href="https://app.acuityscheduling.com/schedule.php?owner=38376333&appointmentType=89085964" target="_blank" class="services-btn">Book a Discovery Call</a>
+        <button class="services-btn enquiry-trigger">Enquire for a Quote</button>
+    </div>
+</section>
+
+<!-- THE STRUCTURED MAGAZINE + HALLWAY IMAGE -->
+<section class="magazine-section" data-section="The Structured Magazine">
+    <div class="magazine-row">
+        <div class="magazine-image">
+            <img src="hallway.jpg" alt="Beautifully styled hallway">
+        </div>
+        <div class="magazine-content">
+            <p class="magazine-label reveal">Exclusive Monthly Membership</p>
+            <h2 class="magazine-title reveal">The Structured Magazine</h2>
+            <p class="magazine-subtitle reveal">Your unfair advantage, delivered to your inbox every month.</p>
+            <p class="magazine-text reveal">A curated virtual magazine designed exclusively for B&amp;B owners who refuse to stand still. Every issue is packed with handpicked furniture and d&eacute;cor finds, seasonal styling shifts to keep your space feeling current, guest experience strategies that drive five-star reviews, and the emerging trends your competitors haven't discovered yet.</p>
+            <div class="magazine-highlights reveal">
+                <span class="magazine-tag">Curated D&eacute;cor Finds</span>
+                <span class="magazine-tag">Seasonal Styling</span>
+                <span class="magazine-tag">Guest Experience</span>
+                <span class="magazine-tag">Booking Trends</span>
+                <span class="magazine-tag">Direct Buy Links</span>
+                <span class="magazine-tag">Competitor Insights</span>
+            </div>
+            <p class="magazine-price reveal">Just <strong>&pound;9.99</strong> per month &mdash; cancel anytime</p>
+            <a href="https://square.link/u/7bOHswgo" target="_blank" class="magazine-btn reveal" id="magSubscribeBtn">Subscribe Now</a>
+            <p class="magazine-note reveal">Join the hosts who stay one step ahead, every single month.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA SLIDESHOW -->
+<section class="cta-section" data-section="Contact / CTA">
+    <div class="cta-line reveal"></div>
+    <p class="cta-label reveal">What's Next?</p>
+    <h2 class="cta-title reveal">Let's Get Started</h2>
+
+    <div class="cta-slider-outer reveal">
+        <div class="cta-slider-track" id="ctaTrack">
+            <div class="cta-slide">
+                <div class="cta-slide-inner">
+                    <div class="cta-slide-num">01</div>
+                    <p class="cta-slide-label">Say Hello</p>
+                    <h3 class="cta-slide-title">Let's Talk</h3>
+                    <p class="cta-slide-text">Whether you have a question, want to chat about your space, or just want to say hello &mdash; I'd love to hear from you.</p>
+                    <ul class="cta-contact-list">
+                        <li><span class="contact-label">Email</span> <a href="mailto:tilly.thomson@structuredspaces.co.uk?subject=Hello%20from%20a%20future%20client&body=Hi%20Tilly%2C%0A%0A">tilly.thomson@structuredspaces.co.uk</a></li>
+                        <li><span class="contact-label">Instagram</span> <a href="https://instagram.com/thestructuredspaces" target="_blank">@thestructuredspaces</a></li>
+                        <li><span class="contact-label">Based</span> Near the Cotswolds, UK</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="cta-slide">
+                <div class="cta-slide-inner">
+                    <div class="cta-slide-num">02</div>
+                    <p class="cta-slide-label">Let's Begin</p>
+                    <h3 class="cta-slide-title">Enquire for a Quote</h3>
+                    <p class="cta-slide-text">Tell me about your space and I'll send a personalised quote within 24 hours. No commitment, no pressure.</p>
+                    <button class="cta-slide-btn enquiry-trigger">Start Your Enquiry</button>
+                    <a href="https://app.acuityscheduling.com/schedule.php?owner=38376333&appointmentType=89085964" target="_blank" class="cta-slide-btn" style="margin-top:0.75rem">Book a Discovery Call</a>
+                </div>
+            </div>
+            <div class="cta-slide">
+                <div class="cta-slide-inner">
+                    <div class="cta-slide-num">03</div>
+                    <p class="cta-slide-label">Save 10%</p>
+                    <h3 class="cta-slide-title">Join the Portfolio</h3>
+                    <p class="cta-slide-text">Let me feature your before &amp; after transformation and share the impact it had on your bookings. You get 10% off your package. Simply tick the portfolio option when you submit your enquiry.</p>
+                    <button class="cta-slide-btn enquiry-trigger">Enquire &amp; Claim 10% Off</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-nav reveal">
+        <button class="cta-arrow" id="ctaPrev">&larr;</button>
+        <div class="cta-dots">
+            <button class="cta-dot active" data-cta-dot="0"></button>
+            <button class="cta-dot" data-cta-dot="1"></button>
+            <button class="cta-dot" data-cta-dot="2"></button>
+        </div>
+        <button class="cta-arrow" id="ctaNext">&rarr;</button>
+    </div>
+    <div class="cta-progress"><div class="cta-progress-bar" id="ctaProgress"></div></div>
+</section>
+
+<!-- MAGAZINE SUBSCRIBE MODAL -->
+
+<!-- ENQUIRY MODAL -->
+<div class="modal-backdrop" id="enquiryModal">
+    <div class="modal">
+        <button class="modal-close" id="closeModal">&times;</button>
+        <p class="modal-label">Get in Touch</p>
+        <h2 class="modal-title">Enquire for a Quote</h2>
+        <form id="enquiryForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Property Name</label>
+                    <input type="text" class="form-input" name="property" placeholder="e.g. Rose Cottage">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" name="location" placeholder="e.g. Cotswolds">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Number of Rooms</label>
+                    <select class="form-select" name="rooms">
+                        <option value="">Select</option>
+                        <option>1 &ndash; 2</option>
+                        <option>3 &ndash; 5</option>
+                        <option>6 &ndash; 10</option>
+                        <option>10+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Budget Range</label>
+                    <select class="form-select" name="budget">
+                        <option value="">Select</option>
+                        <option>Under &pound;500</option>
+                        <option>&pound;500 &ndash; &pound;1,000</option>
+                        <option>&pound;1,000 &ndash; &pound;2,000</option>
+                        <option>&pound;2,000+</option>
+                        <option>Not sure yet</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Service You're Interested In</label>
+                <select class="form-select" name="service">
+                    <option value="">Select</option>
+                    <option>The Essentials</option>
+                    <option>The Signature</option>
+                    <option>The Bespoke</option>
+                    <option>Not sure &mdash; I'd like guidance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Link to Your Listing *</label>
+                <input type="url" class="form-input" name="listing" placeholder="e.g. Airbnb or Booking.com URL" required>
+            </div>
+            <p class="form-or">or, if you don't have a listing yet</p>
+            <div class="form-group">
+                <label class="form-label">Upload Images of Your Space</label>
+                <input type="file" class="form-upload" name="images" multiple accept="image/*">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tell Me About Your Space &amp; Goals</label>
+                <textarea class="form-textarea" name="message" placeholder="What would you like your B&amp;B to look like and achieve? Any styles you love, issues you're facing, or goals you have in mind..."></textarea>
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-start;gap:0.6rem">
+                <input type="checkbox" name="portfolio" id="portfolioCheck" style="accent-color:var(--dark);width:15px;height:15px;margin-top:0.15rem;flex-shrink:0">
+                <label for="portfolioCheck" style="font-size:0.72rem;color:var(--text);line-height:1.6;cursor:pointer">I'm happy for my space to be featured in the Structured Spaces portfolio. <span style="font-style:italic;color:var(--stone)">You'll receive 10% off your package.</span></label>
+            </div>
+            <button type="submit" class="form-submit">Send Enquiry</button>
+            <p class="form-or">or, if you'd prefer to chat first</p>
+            <a href="https://app.acuityscheduling.com/schedule.php?owner=38376333&appointmentType=89085964" target="_blank" class="form-submit" style="background:transparent;color:var(--dark);border-color:var(--taupe);text-align:center;display:block">Book a Discovery Call</a>
+        </form>
+    </div>
+</div>
+
+<!-- COOKIE CONSENT -->
+<div class="cookie-banner" id="cookieBanner">
+    <p class="cookie-text">We use cookies to understand how visitors use this site and to improve your experience. Your data stays on your device and is never shared.</p>
+    <div class="cookie-btns">
+        <button class="cookie-btn cookie-accept" id="cookieAccept">Accept All</button>
+        <button class="cookie-btn cookie-essential" id="cookieEssential">Essential Only</button>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p class="footer-logo">Structured Spaces</p>
+    <p class="footer-sub">Interior Styling for B&amp;Bs</p>
+    <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#" class="enquiry-trigger">Enquire</a>
+        <a href="https://instagram.com/thestructuredspaces" target="_blank">Instagram</a>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Structured Spaces. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Reveal animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Reviews slideshow
+    const rTrack = document.getElementById('reviewsTrack');
+    const rPrev = document.getElementById('reviewsPrev');
+    const rNext = document.getElementById('reviewsNext');
+    const rDots = document.querySelectorAll('.review-dot');
+    let rCurrent = 0;
+    const rTotal = 4;
+
+    function goToReview(n) {
+        rCurrent = (n + rTotal) % rTotal;
+        rTrack.style.transform = `translateX(-${rCurrent * 100}%)`;
+        rDots.forEach((d, i) => d.classList.toggle('active', i === rCurrent));
+    }
+
+    rPrev.addEventListener('click', () => goToReview(rCurrent - 1));
+    rNext.addEventListener('click', () => goToReview(rCurrent + 1));
+    rDots.forEach(d => d.addEventListener('click', () => goToReview(+d.dataset.slide)));
+
+    // Service card flip
+    document.querySelectorAll('.service-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const card = btn.closest('.service-card');
+            const front = card.querySelector('.service-face--front');
+            const back = card.querySelector('.service-face--back');
+            const showingFront = front.classList.contains('active');
+            front.classList.toggle('active', !showingFront);
+            back.classList.toggle('active', showingFront);
+            btn.innerHTML = showingFront ? 'Back to overview &uarr;' : 'What\'s included &darr;';
+        });
+    });
+
+    // Process tabs
+    document.querySelectorAll('.process-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const idx = tab.dataset.tab;
+            document.querySelectorAll('.process-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.process-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelector(`.process-panel[data-panel="${idx}"]`).classList.add('active');
+        });
+    });
+
+    // CTA slideshow
+    const ctaTrack = document.getElementById('ctaTrack');
+    const ctaDots = document.querySelectorAll('.cta-dot');
+    const ctaProgressBar = document.getElementById('ctaProgress');
+    let ctaCurrent = 0;
+    const ctaTotal = 3;
+
+    function goToCta(n) {
+        ctaCurrent = (n + ctaTotal) % ctaTotal;
+        ctaTrack.style.transform = `translateX(-${ctaCurrent * 100}%)`;
+        ctaDots.forEach((d, i) => d.classList.toggle('active', i === ctaCurrent));
+        if (ctaProgressBar) ctaProgressBar.style.width = ((ctaCurrent + 1) / ctaTotal * 100) + '%';
+    }
+
+    document.getElementById('ctaPrev').addEventListener('click', () => goToCta(ctaCurrent - 1));
+    document.getElementById('ctaNext').addEventListener('click', () => goToCta(ctaCurrent + 1));
+    ctaDots.forEach(d => d.addEventListener('click', () => goToCta(+d.dataset.ctaDot)));
+
+    // Auto-advance, but pause when user interacts with a slide
+    let ctaPaused = false;
+    let ctaInterval = setInterval(() => { if (!ctaPaused) goToCta(ctaCurrent + 1); }, 6000);
+
+    // Pause on click inside any slide content
+    document.querySelectorAll('.cta-slide-inner').forEach(slide => {
+        slide.addEventListener('click', () => { ctaPaused = true; });
+    });
+
+    // Resume when user scrolls away from the section
+    const ctaSectionEl = document.querySelector('.cta-section');
+    const ctaScrollObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting && ctaPaused) ctaPaused = false;
+        });
+    }, { threshold: 0.1 });
+    ctaScrollObs.observe(ctaSectionEl);
+
+    // ─── COOKIE CONSENT ───
+    const cookieBanner = document.getElementById('cookieBanner');
+    const consent = localStorage.getItem('ss_cookie_consent');
+    if (!consent) cookieBanner.classList.add('show');
+
+    document.getElementById('cookieAccept').addEventListener('click', () => {
+        localStorage.setItem('ss_cookie_consent', 'all');
+        cookieBanner.classList.remove('show');
+        trackGeo();
+    });
+    document.getElementById('cookieEssential').addEventListener('click', () => {
+        localStorage.setItem('ss_cookie_consent', 'essential');
+        cookieBanner.classList.remove('show');
+    });
+
+    // ─── ANALYTICS TRACKING ───
+    (function() {
+        const today = new Date().toISOString().split('T')[0];
+
+        // Page view
+        const views = JSON.parse(localStorage.getItem('ss_views') || '{}');
+        views[today] = (views[today] || 0) + 1;
+        localStorage.setItem('ss_views', JSON.stringify(views));
+        localStorage.setItem('ss_total', (parseInt(localStorage.getItem('ss_total') || '0') + 1).toString());
+
+        // Session
+        sessionStorage.setItem('ss_start', Date.now().toString());
+
+        // Referral source
+        const ref = document.referrer;
+        let source = 'Direct';
+        if (ref.includes('google')) source = 'Google';
+        else if (ref.includes('instagram')) source = 'Instagram';
+        else if (ref.includes('facebook')) source = 'Facebook';
+        else if (ref.includes('bing')) source = 'Bing';
+        else if (ref.includes('pinterest')) source = 'Pinterest';
+        else if (ref.includes('tiktok')) source = 'TikTok';
+        else if (ref && !ref.includes(location.hostname)) { try { source = new URL(ref).hostname; } catch(e) { source = 'Other'; } }
+        const refs = JSON.parse(localStorage.getItem('ss_referrers') || '{}');
+        refs[source] = (refs[source] || 0) + 1;
+        localStorage.setItem('ss_referrers', JSON.stringify(refs));
+        // Daily referrers
+        const dRefs = JSON.parse(localStorage.getItem('ss_daily_refs') || '{}');
+        if (!dRefs[today]) dRefs[today] = {};
+        dRefs[today][source] = (dRefs[today][source] || 0) + 1;
+        localStorage.setItem('ss_daily_refs', JSON.stringify(dRefs));
+
+        // Device & browser
+        const ua = navigator.userAgent;
+        let device = 'Desktop';
+        if (/Mobi|Android/i.test(ua) && !/Tablet|iPad/i.test(ua)) device = 'Mobile';
+        else if (/Tablet|iPad/i.test(ua)) device = 'Tablet';
+        const devices = JSON.parse(localStorage.getItem('ss_devices') || '{}');
+        devices[device] = (devices[device] || 0) + 1;
+        localStorage.setItem('ss_devices', JSON.stringify(devices));
+
+        let browser = 'Other';
+        if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+        else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+        else if (ua.includes('Firefox')) browser = 'Firefox';
+        else if (ua.includes('Edg')) browser = 'Edge';
+        const browsers = JSON.parse(localStorage.getItem('ss_browsers') || '{}');
+        browsers[browser] = (browsers[browser] || 0) + 1;
+        localStorage.setItem('ss_browsers', JSON.stringify(browsers));
+
+        // Scroll depth
+        let maxScroll = 0;
+        window.addEventListener('scroll', () => {
+            const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+            if (pct > maxScroll) maxScroll = pct;
+        });
+
+        // Bounce tracking
+        let hasInteracted = false;
+        document.addEventListener('click', () => { hasInteracted = true; }, { once: true });
+
+        // Button clicks (with daily tracking)
+        function trackClick(name) {
+            const clicks = JSON.parse(localStorage.getItem('ss_clicks') || '{}');
+            clicks[name] = (clicks[name] || 0) + 1;
+            localStorage.setItem('ss_clicks', JSON.stringify(clicks));
+            const dc = JSON.parse(localStorage.getItem('ss_daily_clicks') || '{}');
+            if (!dc[today]) dc[today] = {};
+            dc[today][name] = (dc[today][name] || 0) + 1;
+            localStorage.setItem('ss_daily_clicks', JSON.stringify(dc));
+            journey.clicks.push(name);
+        }
+
+        // Visitor journey (per session)
+        const journey = { sections: [], clicks: [] };
+
+        document.querySelectorAll('.enquiry-trigger').forEach(btn => {
+            btn.addEventListener('click', () => trackClick('Enquire for a Quote'));
+        });
+        document.querySelectorAll('.services-btn').forEach(btn => {
+            if (btn.textContent.includes('Discovery')) btn.addEventListener('click', () => trackClick('Book a Discovery Call'));
+        });
+        document.querySelectorAll('a[href*="instagram"]').forEach(a => {
+            a.addEventListener('click', () => trackClick('Instagram'));
+        });
+        document.querySelectorAll('a[href*="mailto"]').forEach(a => {
+            a.addEventListener('click', () => trackClick('Email'));
+        });
+        document.querySelectorAll('.hero-btn').forEach(btn => {
+            if (btn.textContent.includes('Services')) btn.addEventListener('click', () => trackClick('Our Services (Hero)'));
+        });
+        document.querySelectorAll('.cta-slide-btn').forEach(btn => {
+            btn.addEventListener('click', () => trackClick(btn.textContent.trim()));
+        });
+        document.querySelectorAll('.magazine-btn').forEach(btn => {
+            btn.addEventListener('click', () => trackClick('Magazine Subscribe'));
+        });
+
+        // Section views (once per session)
+        const sectionObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const name = entry.target.dataset.section;
+                    if (name) {
+                        const sections = JSON.parse(localStorage.getItem('ss_sections') || '{}');
+                        sections[name] = (sections[name] || 0) + 1;
+                        localStorage.setItem('ss_sections', JSON.stringify(sections));
+                        journey.sections.push(name);
+                    }
+                    sectionObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('[data-section]').forEach(el => sectionObs.observe(el));
+
+        // Section time tracking
+        const sTimers = {};
+        const sTimeObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const name = entry.target.dataset.section;
+                if (!name) return;
+                if (entry.isIntersecting) {
+                    sTimers[name] = Date.now();
+                } else if (sTimers[name]) {
+                    const elapsed = Math.round((Date.now() - sTimers[name]) / 1000);
+                    const st = JSON.parse(localStorage.getItem('ss_section_times') || '{}');
+                    st[name] = (st[name] || 0) + elapsed;
+                    localStorage.setItem('ss_section_times', JSON.stringify(st));
+                    delete sTimers[name];
+                }
+            });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('[data-section]').forEach(el => sTimeObs.observe(el));
+
+        // Enquiry funnel
+        let funnelStarted = false;
+        const modalEl = document.getElementById('enquiryModal');
+        const formEl = document.getElementById('enquiryForm');
+
+        const mObs = new MutationObserver(() => {
+            if (modalEl.classList.contains('open')) {
+                const f = JSON.parse(localStorage.getItem('ss_funnel') || '{"viewed":0,"started":0,"submitted":0}');
+                f.viewed++;
+                localStorage.setItem('ss_funnel', JSON.stringify(f));
+                mObs.disconnect();
+            }
+        });
+        mObs.observe(modalEl, { attributes: true, attributeFilter: ['class'] });
+
+        if (formEl) {
+            formEl.addEventListener('focusin', () => {
+                if (!funnelStarted) {
+                    funnelStarted = true;
+                    const f = JSON.parse(localStorage.getItem('ss_funnel') || '{"viewed":0,"started":0,"submitted":0}');
+                    f.started++;
+                    localStorage.setItem('ss_funnel', JSON.stringify(f));
+                }
+            });
+            formEl.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Funnel tracking
+                const f = JSON.parse(localStorage.getItem('ss_funnel') || '{"viewed":0,"started":0,"submitted":0}');
+                f.submitted++;
+                localStorage.setItem('ss_funnel', JSON.stringify(f));
+                // Save to localStorage for dashboard
+                const subs = JSON.parse(localStorage.getItem('ss_submissions') || '[]');
+                subs.push({
+                    date: new Date().toISOString(),
+                    name: formEl.querySelector('[name="name"]').value,
+                    email: formEl.querySelector('[name="email"]').value,
+                    property: formEl.querySelector('[name="property"]').value,
+                    location: formEl.querySelector('[name="location"]').value,
+                    rooms: formEl.querySelector('[name="rooms"]').value,
+                    budget: formEl.querySelector('[name="budget"]').value,
+                    service: formEl.querySelector('[name="service"]').value,
+                    message: formEl.querySelector('[name="message"]').value,
+                    portfolio: formEl.querySelector('[name="portfolio"]').checked,
+                    journey: journey.sections.slice(),
+                    journeyClicks: journey.clicks.slice(),
+                    referrer: source,
+                    device: device,
+                    browser: browser
+                });
+                localStorage.setItem('ss_submissions', JSON.stringify(subs));
+                localStorage.setItem('ss_enquiries', (parseInt(localStorage.getItem('ss_enquiries') || '0') + 1).toString());
+                const de = JSON.parse(localStorage.getItem('ss_daily_enquiries') || '{}');
+                de[today] = (de[today] || 0) + 1;
+                localStorage.setItem('ss_daily_enquiries', JSON.stringify(de));
+                // Send to Formspree in background
+                const formData = new FormData(formEl);
+                fetch('https://formspree.io/f/xvzbkdpj', { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
+                // Show success message
+                formEl.innerHTML = '<div style="text-align:center;padding:2.5rem 0"><p style="font-family:Cormorant Garamond,serif;font-size:1.5rem;font-weight:300;font-style:italic;color:#1A1A1A;margin-bottom:.75rem">Thank You</p><p style="font-size:.8rem;color:#5A5A5A;line-height:1.8">Your enquiry has been sent. I\u2019ll be in touch within 24 hours.</p></div>';
+            });
+        }
+
+        // Before unload — save session data
+        window.addEventListener('beforeunload', () => {
+            const start = parseInt(sessionStorage.getItem('ss_start') || '0');
+            if (start) {
+                const dur = Math.round((Date.now() - start) / 1000);
+                const times = JSON.parse(localStorage.getItem('ss_times') || '[]');
+                times.push(dur);
+                if (times.length > 300) times.shift();
+                localStorage.setItem('ss_times', JSON.stringify(times));
+            }
+            // Scroll depth
+            const depths = JSON.parse(localStorage.getItem('ss_scroll_depths') || '[]');
+            depths.push(maxScroll);
+            if (depths.length > 300) depths.shift();
+            localStorage.setItem('ss_scroll_depths', JSON.stringify(depths));
+            // Bounce
+            if (!hasInteracted) {
+                localStorage.setItem('ss_bounce_total', (parseInt(localStorage.getItem('ss_bounce_total') || '0') + 1).toString());
+            }
+            // Remaining section times
+            Object.entries(sTimers).forEach(([name, start]) => {
+                const elapsed = Math.round((Date.now() - start) / 1000);
+                const st = JSON.parse(localStorage.getItem('ss_section_times') || '{}');
+                st[name] = (st[name] || 0) + elapsed;
+                localStorage.setItem('ss_section_times', JSON.stringify(st));
+            });
+        });
+
+        // Geolocation (only with full consent)
+        window.trackGeo = function() {
+            if (localStorage.getItem('ss_cookie_consent') !== 'all') return;
+            fetch('https://ipapi.co/json/')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.city) {
+                        const locs = JSON.parse(localStorage.getItem('ss_locations') || '{}');
+                        const loc = data.city + ', ' + data.country_name;
+                        locs[loc] = (locs[loc] || 0) + 1;
+                        localStorage.setItem('ss_locations', JSON.stringify(locs));
+                    }
+                }).catch(() => {});
+        };
+        if (localStorage.getItem('ss_cookie_consent') === 'all') trackGeo();
+    })();
+
+    // Enquiry modal
+    const modal = document.getElementById('enquiryModal');
+    document.querySelectorAll('.enquiry-trigger').forEach(btn => {
+        btn.addEventListener('click', () => modal.classList.add('open'));
+    });
+    document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('open');
+    });
+
+    // Magazine subscribe — Formspree notification when they click
+    document.getElementById('magSubscribeBtn').addEventListener('click', () => {
+        const formData = new FormData();
+        formData.append('_subject', 'New Magazine Subscriber');
+        formData.append('message', 'Someone clicked Subscribe — check Square for payment confirmation.');
+        fetch('https://formspree.io/f/xvzbkdpj', { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } });
+    });
+</script>
+
+</body>
+</html>
